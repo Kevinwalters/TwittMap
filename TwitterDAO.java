@@ -29,11 +29,11 @@ public class TwitterDAO {
     		String insertString;
     		for (String keyword : keywords) {
     			insertString = insertSQL;
-    			insertString += "'" + statusId + "'";
-    			insertString += "'" + screenName + "'";
-    			insertString += "'" + text + "'";
-    			insertString += "'" + latitude + "'";
-    			insertString += "'" + longitude + "'";
+    			insertString += statusId + ", ";
+    			insertString += "'" + screenName + "', ";
+    			insertString += "'" + text + "', ";
+    			insertString += latitude + ", ";
+    			insertString += longitude + ", ";
     			insertString += "'" + keyword + "'";
     			insertString += endSQL;
     			stmt.executeUpdate(insertString);
@@ -60,14 +60,14 @@ public class TwitterDAO {
     	}
 	}
 	
-	public void deleteStatus(String statusId) {
+	public void deleteStatus(long statusId) {
 		Connection conn = null;
 		Statement stmt = null;
     	try {
     		conn = DriverManager.getConnection("jdbc:mysql://localhost/test?user=admin&password=assignment1rootpassword");
     		stmt = conn.createStatement();
     		String deleteString = deleteSQL;
-    		deleteString += "'" + statusId + "'";
+    		deleteString += statusId;
     		deleteString += endSQL;
     		stmt.executeUpdate(deleteString);
     	} catch (SQLException e) {
