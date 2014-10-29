@@ -52,6 +52,7 @@ public final class TweetGet {
             public void onStatus(Status status) {
                 System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
                 long statusId = status.getId();
+                long userId = status.getUser().getId();
                 String screenName = status.getUser().getScreenName();
                 String text = status.getText();
                 GeoLocation location = status.getGeoLocation();
@@ -73,8 +74,9 @@ public final class TweetGet {
             @Override
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
                 System.out.println("Got a status deletion notice id:" + statusDeletionNotice.getStatusId());
+                long userId = statusDeletionNotice.getUserId();
                 long statusId = statusDeletionNotice.getStatusId();
-                dao.deleteStatus(statusId);
+                dao.deleteStatus(userId, statusId);
             }
 
             @Override
@@ -85,6 +87,7 @@ public final class TweetGet {
             @Override
             public void onScrubGeo(long userId, long upToStatusId) {
                 System.out.println("Got scrub_geo event userId:" + userId + " upToStatusId:" + upToStatusId);
+                dao.scrubGeo(userId, upToStatusId);
             }
 
             @Override
