@@ -20,7 +20,7 @@ public class TwitterDAO {
         }
 	}
 	
-	public void insertStatus(String statusId, String screenName, String text, long latitude, long longitude, List<String> keywords) {
+	public void insertStatus(long statusId, String screenName, String text, double latitude, double longitude, List<String> keywords) {
 		Connection conn = null;
 		Statement stmt = null;
     	try {

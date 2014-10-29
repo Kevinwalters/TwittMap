@@ -32,6 +32,8 @@ public final class TweetGet {
      * @param args
      */
     public static void main(String[] args) throws TwitterException {
+    	final TwitterDAO dao = new TwitterDAO();
+    	
     	 ConfigurationBuilder cb = new ConfigurationBuilder();
          cb.setDebugEnabled(true)
            .setOAuthConsumerKey(oAuthConsumerKey)
@@ -48,19 +50,22 @@ public final class TweetGet {
                 String screenName = status.getUser().getScreenName();
                 String text = status.getText();
                 GeoLocation location = status.getGeoLocation();
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
+                if (location != null) {
+	                double latitude = location.getLatitude();
+	                double longitude = location.getLongitude();
+                }
                 String userProfileLocation = status.getUser().getLocation();  
                 
+                System.out.println(location + ", " + userProfileLocation);
                 //TODO parse for keywords
                 //TODO if location == null, use userProfileLocation, and query google maps 
-                
+                //dao.insertStatus(statusId, screenName, text, latitude, longitude, null);
             }
 
             @Override
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
                 System.out.println("Got a status deletion notice id:" + statusDeletionNotice.getStatusId());
-                long statusId = statusDeletionNotice.getStatusId() //same ID as the status ID above - just delete from DB
+                long statusId = statusDeletionNotice.getStatusId(); //same ID as the status ID above - just delete from DB
             }
 
             @Override
