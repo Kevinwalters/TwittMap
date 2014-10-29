@@ -1,3 +1,5 @@
+
+import twitter4j.FilterQuery;
 import twitter4j.GeoLocation;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -6,6 +8,7 @@ import twitter4j.StatusListener;
 import twitter4j.TwitterException;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
+import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.sql.Connection;
@@ -88,7 +91,15 @@ public final class TweetGet {
                 ex.printStackTrace();
             }
         };
+        FilterQuery fq = new FilterQuery();
+        String keywords[] = {"ISIS", "NFL", "Halloween","Interstellar","Thanksgiving"};
+
+        fq.track(keywords);
+
         twitterStream.addListener(listener);
-        twitterStream.sample();
+        twitterStream.filter(fq); 
+        
+        //twitterStream.addListener(listener);
+        //twitterStream.sample();
     }
 }
