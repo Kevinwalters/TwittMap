@@ -95,8 +95,8 @@ public final class TweetGet {
         };
         FilterQuery fq = new FilterQuery();
         String keywords[] = {"ISIS", "NFL", "Ebola","Interstellar","Thanksgiving","Christopher Nolan","Winter","NYC","Obama"};
-
-        fq.track(keywords);
+        String lang[] = {"en","es"};
+        fq.track(keywords).language(lang);
 
         twitterStream.addListener(listener);
         twitterStream.filter(fq); 
