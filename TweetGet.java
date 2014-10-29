@@ -51,6 +51,8 @@ public final class TweetGet {
             @Override
             public void onStatus(Status status) {
                 System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+            	//System.out.println(status.getText());
+                
                 long statusId = status.getId();
                 long userId = status.getUser().getId();
                 String screenName = status.getUser().getScreenName();
@@ -101,14 +103,13 @@ public final class TweetGet {
             }
         };
         FilterQuery fq = new FilterQuery();
-        String keywords[] = {"ISIS", "NFL", "Halloween","Interstellar","Thanksgiving"};
-
-        fq.track(keywords);
+        String keywords[] = {"ISIS", "NFL", "Ebola","Interstellar","Thanksgiving","Christopher Nolan","Winter","NYC","Obama"};
+        String lang[] = {"en","es"};
+        fq.track(keywords).language(lang);
 
         twitterStream.addListener(listener);
         twitterStream.filter(fq); 
         
-        //twitterStream.addListener(listener);
-        //twitterStream.sample();
+
     }
 }
