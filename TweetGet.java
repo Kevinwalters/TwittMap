@@ -31,7 +31,8 @@ public final class TweetGet {
 	private static String oAuthAccessToken = "1952751391-ISOlpkQMwv79EOtUQRwdOhlmY5eZMCWM3TePX50";
 	private static String oAuthAccessTokenSecret = "lKbVowBHd7xogIsmdiuHB6WBGO0GyR8RoddDmS0XW0TGl";
 	private static String[] keywords = {"ISIS", "NFL", "Ebola","Interstellar","Thanksgiving","Halloween","Winter","NYC","Obama"};
-
+	
+	
     /**
      * Main entry of this application.
      *

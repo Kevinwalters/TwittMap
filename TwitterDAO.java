@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class TwitterDAO {
 	
 	private String insertSQL = "INSERT INTO Statuses(UserId, StatusId, ScreenName, StatusText, Latitude, Longitude, Keyword) " +
@@ -19,6 +18,12 @@ public class TwitterDAO {
 	private String updateSQL = "UPDATE Statuses SET Latitude=0, Longitude=0 WHERE UserId = ";
 	private String updateStatusSQL = " AND StatusId <= ";
 	private String endSQL = ")";
+	private final static String DB = "jdbc:mysql://";
+	private final static String ENDPOINT = "aag5obk3j1kr5y.cbfmpecmwali.us-east-1.rds.amazonaws.com:3306/ebdb?";
+	private final static String USER = "user=cloudcomputing";
+	private final static String PASS = "&password=Assignment1";
+	private final static String CONNECTION = DB + ENDPOINT + USER + PASS;
+	private final static String CONNECTION_TEMP = "jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1";
 	
 	public TwitterDAO() {
 		try {
@@ -32,7 +37,7 @@ public class TwitterDAO {
 		Connection conn = null;
 		PreparedStatement stmt = null;
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
+    		conn = DriverManager.getConnection(CONNECTION);
     		stmt = conn.prepareStatement(insertSQL);
 			stmt.setLong(1,  tweet.getUserId());
 			stmt.setLong(2, tweet.getStatusId());
@@ -68,7 +73,7 @@ public class TwitterDAO {
 		Connection conn = null;
 		Statement stmt = null;
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
+    		conn = DriverManager.getConnection(CONNECTION);
     		stmt = conn.createStatement();
     		String deleteString = deleteSQL;
     		deleteString += userId;
@@ -105,8 +110,8 @@ public class TwitterDAO {
 		Connection conn = null;
 		Statement stmt = null;
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
-    		stmt = conn.createStatement();
+    		conn = DriverManager.getConnection(CONNECTION);
+       		stmt = conn.createStatement();
     		String updateString = updateSQL;
     		updateString += userId;
     		updateString += updateStatusSQL;
@@ -139,7 +144,7 @@ public class TwitterDAO {
 		Statement stmt = null;
 		List<Tweet> tweets = new ArrayList<Tweet>();
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
+    		conn = DriverManager.getConnection(CONNECTION);
     		stmt = conn.createStatement();
     		String selectString = selectSQL;
     		ResultSet rs = stmt.executeQuery(selectString);
@@ -181,7 +186,7 @@ public class TwitterDAO {
 		Statement stmt = null;
 		List<Tweet> tweets = new ArrayList<Tweet>();
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
+    		conn = DriverManager.getConnection(CONNECTION);
     		stmt = conn.createStatement();
     		String selectString = selectSQL;
     		selectString += selectFilterSQL;
