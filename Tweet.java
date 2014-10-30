@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.List;
 
 
@@ -9,18 +10,20 @@ public class Tweet {
 	private String text;
 	private double latitude;
 	private double longitude;
+	private Date createdTime;
 	
 	public Tweet() {
 		
 	}
 	
-	public Tweet(long userId, long statusId, String screenName, String text, double latitude, double longitude) {
+	public Tweet(long userId, long statusId, String screenName, String text, double latitude, double longitude, Date createdTime) {
 		this.setUserId(userId);
 		this.setStatusId(statusId);
 		this.setScreenName(screenName);
 		this.setText(text);
 		this.setLatitude(latitude);
 		this.setLongitude(longitude);
+		this.setCreatedTime(createdTime);
 	}
 
 	public long getStatusId() {
@@ -69,6 +72,14 @@ public class Tweet {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
 	}
 
 }

@@ -4,13 +4,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TwitterDAO {
 	
-	private String insertSQL = "INSERT INTO Statuses(UserId, StatusId, ScreenName, StatusText, Latitude, Longitude, Keyword) " +
-								"VALUES (?,?,?,?,?,?,?)";
+	private String insertSQL = "INSERT INTO Statuses(UserId, StatusId, ScreenName, StatusText, Latitude, Longitude, Keyword, CreatedTime) " +
+								"VALUES (?,?,?,?,?,?,?,?)";
 	private String deleteSQL = "DELETE FROM Statuses WHERE UserId = ";
 	private String deleteStatusSQL = " AND StatusId = ";
 	private String selectSQL = "SELECT * FROM Statuses";
@@ -36,6 +39,7 @@ public class TwitterDAO {
 	public void insertStatus(Tweet tweet, String keyword) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	try {
     		conn = DriverManager.getConnection(CONNECTION);
     		stmt = conn.prepareStatement(insertSQL);
@@ -46,6 +50,9 @@ public class TwitterDAO {
 			stmt.setDouble(5, tweet.getLatitude());
 			stmt.setDouble(6, tweet.getLongitude());
 			stmt.setString(7, keyword);
+
+			String tweetTime = sdf.format(tweet.getCreatedTime());
+			stmt.setString(8, tweetTime);
 			stmt.executeUpdate();
     	} catch (SQLException e) {
     		System.out.println("SQLException: " + e.getMessage());
@@ -155,7 +162,8 @@ public class TwitterDAO {
     			String text = rs.getString("StatusText");
     			double latitude = rs.getDouble("Latitude");
     			double longitude = rs.getDouble("Longitude");
-    			Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude);
+    			Date createdTime = rs.getDate("CreatedTime");
+    			Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude, createdTime);
     			tweets.add(tweet);
     		}
     	} catch (SQLException e) {
@@ -199,7 +207,8 @@ public class TwitterDAO {
     			String text = rs.getString("StatusText");
     			double latitude = rs.getDouble("Latitude");
     			double longitude = rs.getDouble("Longitude");
-    			Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude);
+    			Date createdTime = rs.getDate("CreatedTime");
+    			Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude, createdTime);
     			tweets.add(tweet);
     		}
     	} catch (SQLException e) {

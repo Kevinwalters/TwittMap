@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,6 +60,7 @@ public final class TweetGet {
                 String text = status.getText();
                 GeoLocation location = status.getGeoLocation();
                 String userProfileLocation = status.getUser().getLocation();  
+                Date createdTime = status.getCreatedAt();
                 double latitude = 0;
                 double longitude = 0;
                 if (location != null) {
@@ -68,7 +70,7 @@ public final class TweetGet {
                 	//TODO query google for coords
                 }
                 
-                Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude);
+                Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude, createdTime);
                 boolean hasKeyword = false;
                 for (String keyword : keywords) {
                 	if (text.toUpperCase().contains(keyword.toUpperCase())) {
