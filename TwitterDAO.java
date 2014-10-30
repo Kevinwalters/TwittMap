@@ -28,34 +28,20 @@ public class TwitterDAO {
         }
 	}
 	
-	public void insertStatus(Tweet tweet, List<String> keywords) {
+	public void insertStatus(Tweet tweet, String keyword) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
     	try {
     		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
     		stmt = conn.prepareStatement(insertSQL);
-    		String insertString;
-    		if (keywords == null) {
-    			stmt.setLong(1,  tweet.getUserId());
-    			stmt.setLong(2, tweet.getStatusId());
-    			stmt.setString(3, tweet.getScreenName());
-    			stmt.setString(4, tweet.getText());
-    			stmt.setDouble(5, tweet.getLatitude());
-    			stmt.setDouble(6, tweet.getLongitude());
-    			stmt.setString(7, "none");
-    			stmt.executeUpdate();
-    		} else {
-    			for (String keyword : keywords) {
-    				stmt.setLong(1,  tweet.getUserId());
-        			stmt.setLong(2, tweet.getStatusId());
-        			stmt.setString(3, tweet.getScreenName());
-        			stmt.setString(4, tweet.getText());
-        			stmt.setDouble(5, tweet.getLatitude());
-        			stmt.setDouble(6, tweet.getLongitude());
-        			stmt.setString(7, keyword);
-        			stmt.executeUpdate();
-        		}
-    		}
+			stmt.setLong(1,  tweet.getUserId());
+			stmt.setLong(2, tweet.getStatusId());
+			stmt.setString(3, tweet.getScreenName());
+			stmt.setString(4, tweet.getText());
+			stmt.setDouble(5, tweet.getLatitude());
+			stmt.setDouble(6, tweet.getLongitude());
+			stmt.setString(7, keyword);
+			stmt.executeUpdate();
     	} catch (SQLException e) {
     		System.out.println("SQLException: " + e.getMessage());
     	    System.out.println("SQLState: " + e.getSQLState());
@@ -82,13 +68,12 @@ public class TwitterDAO {
 		Connection conn = null;
 		Statement stmt = null;
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost/test?user=admin&password=assignment1rootpassword");
+    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
     		stmt = conn.createStatement();
     		String deleteString = deleteSQL;
     		deleteString += userId;
     		deleteString += deleteStatusSQL;
     		deleteString += statusId;
-    		deleteString += endSQL;
     		stmt.executeUpdate(deleteString);
     	} catch (SQLException e) {
     		System.out.println("SQLException: " + e.getMessage());
@@ -120,7 +105,7 @@ public class TwitterDAO {
 		Connection conn = null;
 		Statement stmt = null;
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost/test?user=admin&password=assignment1rootpassword");
+    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
     		stmt = conn.createStatement();
     		String updateString = updateSQL;
     		updateString += userId;
@@ -154,7 +139,7 @@ public class TwitterDAO {
 		Statement stmt = null;
 		List<Tweet> tweets = new ArrayList<Tweet>();
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost/test?user=admin&password=assignment1rootpassword");
+    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
     		stmt = conn.createStatement();
     		String selectString = selectSQL;
     		ResultSet rs = stmt.executeQuery(selectString);
@@ -196,7 +181,7 @@ public class TwitterDAO {
 		Statement stmt = null;
 		List<Tweet> tweets = new ArrayList<Tweet>();
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost/test?user=admin&password=assignment1rootpassword");
+    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
     		stmt = conn.createStatement();
     		String selectString = selectSQL;
     		selectString += selectFilterSQL;
