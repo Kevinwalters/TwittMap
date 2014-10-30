@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class TwitterDAO {
 	
-	private String insertSQL = "INSERT INTO Statuses(UserId, StatusId, ScreenName, Test, Latitude, Longitude, Keyword) " +
-								"VALUES (";
+	private String insertSQL = "INSERT INTO Statuses(UserId, StatusId, ScreenName, StatusText, Latitude, Longitude, Keyword) " +
+								"VALUES (?,?,?,?,?,?,?)";
 	private String deleteSQL = "DELETE FROM Statuses WHERE UserId = ";
 	private String deleteStatusSQL = " AND StatusId = ";
 	private String selectSQL = "SELECT * FROM Statuses";
@@ -29,22 +30,31 @@ public class TwitterDAO {
 	
 	public void insertStatus(Tweet tweet, List<String> keywords) {
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost/test?user=admin&password=assignment1rootpassword");
-    		stmt = conn.createStatement();
+    		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=cloudcomputing&password=Assignment1");
+    		stmt = conn.prepareStatement(insertSQL);
     		String insertString;
-    		for (String keyword : keywords) {
-    			insertString = insertSQL;
-    			insertString += tweet.getUserId() + ", ";
-    			insertString += tweet.getStatusId() + ", ";
-    			insertString += "'" + tweet.getScreenName() + "', ";
-    			insertString += "'" + tweet.getText() + "', ";
-    			insertString += tweet.getLatitude() + ", ";
-    			insertString += tweet.getLongitude() + ", ";
-    			insertString += "'" + keyword + "'";
-    			insertString += endSQL;
-    			stmt.executeUpdate(insertString);
+    		if (keywords == null) {
+    			stmt.setLong(1,  tweet.getUserId());
+    			stmt.setLong(2, tweet.getStatusId());
+    			stmt.setString(3, tweet.getScreenName());
+    			stmt.setString(4, tweet.getText());
+    			stmt.setDouble(5, tweet.getLatitude());
+    			stmt.setDouble(6, tweet.getLongitude());
+    			stmt.setString(7, "none");
+    			stmt.executeUpdate();
+    		} else {
+    			for (String keyword : keywords) {
+    				stmt.setLong(1,  tweet.getUserId());
+        			stmt.setLong(2, tweet.getStatusId());
+        			stmt.setString(3, tweet.getScreenName());
+        			stmt.setString(4, tweet.getText());
+        			stmt.setDouble(5, tweet.getLatitude());
+        			stmt.setDouble(6, tweet.getLongitude());
+        			stmt.setString(7, keyword);
+        			stmt.executeUpdate();
+        		}
     		}
     	} catch (SQLException e) {
     		System.out.println("SQLException: " + e.getMessage());
@@ -152,7 +162,7 @@ public class TwitterDAO {
     			long userId = rs.getLong("UserId");
     			long statusId = rs.getLong("StatusId");
     			String screenName = rs.getString("ScreenName");
-    			String text = rs.getString("Text");
+    			String text = rs.getString("StatusText");
     			double latitude = rs.getDouble("Latitude");
     			double longitude = rs.getDouble("Longitude");
     			Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude);
@@ -196,7 +206,7 @@ public class TwitterDAO {
     			long userId = rs.getLong("UserId");
     			long statusId = rs.getLong("StatusId");
     			String screenName = rs.getString("ScreenName");
-    			String text = rs.getString("Text");
+    			String text = rs.getString("StatusText");
     			double latitude = rs.getDouble("Latitude");
     			double longitude = rs.getDouble("Longitude");
     			Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude);

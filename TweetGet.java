@@ -59,8 +59,8 @@ public final class TweetGet {
                 String text = status.getText();
                 GeoLocation location = status.getGeoLocation();
                 String userProfileLocation = status.getUser().getLocation();  
-                double latitude;
-                double longitude;
+                double latitude = 0;
+                double longitude = 0;
                 if (location != null) {
 	                latitude = location.getLatitude();
 	                longitude = location.getLongitude();
@@ -68,9 +68,12 @@ public final class TweetGet {
                 	//TODO query google for coords
                 }
                 
-                System.out.println(location + ", " + userProfileLocation);
+                Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude);
+                
+                //System.out.println(location + ", " + userProfileLocation);
                 //TODO parse for keywords
-                //dao.insertStatus(statusId, screenName, text, latitude, longitude, null);
+
+                dao.insertStatus(tweet, null);
             }
 
             @Override
@@ -109,7 +112,5 @@ public final class TweetGet {
 
         twitterStream.addListener(listener);
         twitterStream.filter(fq); 
-        
-
     }
 }
