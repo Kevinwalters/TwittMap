@@ -25,24 +25,25 @@ import java.util.List;
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-public final class TweetGet {
+public final class Tweetgetter {
 
-	private static String oAuthConsumerKey = "oQ7aCFiY7cjfmLUutJiouvzw5";
-	private static String oAuthConsumerSecret = "mturYGKTi7CXhRlK9gkSJWF8XKyV1pTRLX7n2OBBydYKBTL9e6";
-	private static String oAuthAccessToken = "1952751391-ISOlpkQMwv79EOtUQRwdOhlmY5eZMCWM3TePX50";
-	private static String oAuthAccessTokenSecret = "lKbVowBHd7xogIsmdiuHB6WBGO0GyR8RoddDmS0XW0TGl";
-	private static String[] keywords = {"ISIS", "NFL", "Ebola","Interstellar","Thanksgiving","Halloween","Winter","NYC","Obama"};
-	
-	
+    private static String oAuthConsumerKey = "oQ7aCFiY7cjfmLUutJiouvzw5";
+    private static String oAuthConsumerSecret = "mturYGKTi7CXhRlK9gkSJWF8XKyV1pTRLX7n2OBBydYKBTL9e6";
+    private static String oAuthAccessToken = "1952751391-ISOlpkQMwv79EOtUQRwdOhlmY5eZMCWM3TePX50";
+    private static String oAuthAccessTokenSecret = "lKbVowBHd7xogIsmdiuHB6WBGO0GyR8RoddDmS0XW0TGl";
+    private static String[] keywords = {"1YearOf1DDAY ", "ISIS", "NFL", "Ebola","Interstellar","Thanksgiving","Halloween","Winter","NYC","Obama", "Arsenal"};
+    
+    
     /**
      * Main entry of this application.
      *
      * @param args
      */
     public static void main(String[] args) throws TwitterException {
-    	final TwitterDAO dao = new TwitterDAO();
-    	
-    	 ConfigurationBuilder cb = new ConfigurationBuilder();
+        //final TwitterDAO dao = new TwitterDAO();
+        final SimpleQueueServiceSample testsqs = new SimpleQueueServiceSample();
+        String queue = testsqs.createq();
+        ConfigurationBuilder cb = new ConfigurationBuilder();
          cb.setDebugEnabled(true)
            .setOAuthConsumerKey(oAuthConsumerKey)
            .setOAuthConsumerSecret(oAuthConsumerSecret)
@@ -53,7 +54,7 @@ public final class TweetGet {
         StatusListener listener = new StatusListener() {
             @Override
             public void onStatus(Status status) {
-                System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+                //System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
                 long statusId = status.getId();
                 long userId = status.getUser().getId();
                 String screenName = status.getUser().getScreenName();
@@ -64,22 +65,30 @@ public final class TweetGet {
                 double latitude = 0;
                 double longitude = 0;
                 if (location != null) {
-	                latitude = location.getLatitude();
-	                longitude = location.getLongitude();
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
                 } else if (userProfileLocation != null) {
-                	//TODO query google for coords
+                    //TODO query google for coords
                 }
                 
                 Tweet tweet = new Tweet(userId, statusId, screenName, text, latitude, longitude, createdTime);
                 boolean hasKeyword = false;
                 for (String keyword : keywords) {
-                	if (text.toUpperCase().contains(keyword.toUpperCase())) {
-                		hasKeyword = true;
-                		dao.insertStatus(tweet, keyword);
-                	}
+                    if (text.toUpperCase().contains(keyword.toUpperCase())) {
+                        hasKeyword = true;
+                        System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+                        System.out.println("\n\n\nKeyword found!!\n\n\n");
+                        try {
+                            testsqs.sendmsg(tweet);
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        //  dao.insertStatus(tweet, keyword);
+                    }
                 }
                 if (!hasKeyword) {
-                	dao.insertStatus(tweet, "none");
+                    //dao.insertStatus(tweet, "none");
                 }
             }
 
@@ -88,7 +97,7 @@ public final class TweetGet {
                 System.out.println("Got a status deletion notice id:" + statusDeletionNotice.getStatusId());
                 long userId = statusDeletionNotice.getUserId();
                 long statusId = statusDeletionNotice.getStatusId();
-                dao.deleteStatus(userId, statusId);
+               // dao.deleteStatus(userId, statusId);
             }
 
             @Override
@@ -99,7 +108,7 @@ public final class TweetGet {
             @Override
             public void onScrubGeo(long userId, long upToStatusId) {
                 System.out.println("Got scrub_geo event userId:" + userId + " upToStatusId:" + upToStatusId);
-                dao.scrubGeo(userId, upToStatusId);
+                //dao.scrubGeo(userId, upToStatusId);
             }
 
             @Override
